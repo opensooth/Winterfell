@@ -1,4 +1,1 @@
-
-module.exports = (array) => {
-  return array.slice(0);
-};
+export default array => array.slice(0);

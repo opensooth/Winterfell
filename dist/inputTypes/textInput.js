@@ -1,14 +1,22 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var React = require('react');
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
 
 var TextInput = (function (_React$Component) {
   _inherits(TextInput, _React$Component);
@@ -33,7 +41,8 @@ var TextInput = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      return React.createElement('input', { type: 'text',
+      return _react2['default'].createElement('input', {
+        type: 'text',
         name: this.props.name,
         id: this.props.id,
         'aria-labelledby': this.props.labelId,
@@ -43,14 +52,13 @@ var TextInput = (function (_React$Component) {
         required: this.props.required ? 'required' : undefined,
         onChange: this.handleChange.bind(this),
         onBlur: this.props.onBlur.bind(null, this.state.value),
-        onKeyDown: this.props.onKeyDown });
+        onKeyDown: this.props.onKeyDown
+      });
     }
   }]);
 
   return TextInput;
-})(React.Component);
-
-;
+})(_react2['default'].Component);
 
 TextInput.defaultProps = {
   classes: {},
@@ -63,4 +71,5 @@ TextInput.defaultProps = {
   onKeyDown: function onKeyDown() {}
 };
 
-module.exports = TextInput;
+exports['default'] = TextInput;
+module.exports = exports['default'];

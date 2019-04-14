@@ -1,29 +1,27 @@
-var _            = require('lodash').noConflict();
-var Validator    = require('validator');
-var StringParser = require('./stringParser');
+import _ from 'lodash';
+import Validator from 'validator';
+import StringParser from './stringParser';
 
 var extraValidators = {
-
   /*
    * isAccepted Validation Mehod
    */
-  isAccepted : (value, expected) => {
-    return value == expected;
+  isAccepted: (value, expected) => {
+    return value === expected;
   },
 
   /*
    * isAllIn Validation Method
    */
-  isAllIn : (value, options) => {
+  isAllIn: (value, options) => {
     if (!value) {
       return false;
     }
 
-    return _.every(value, (item) => {
+    return _.every(value, item => {
       return options.indexOf(item) > -1;
     });
   }
-
 };
 
 /**
@@ -33,17 +31,21 @@ var extraValidators = {
  * @param  object  validationItem Rule set for validator
  * @return boolean                Valid?
  */
-var validateAnswer = (value, validationItem, questionAnswers) => {
-  var validationMethod = typeof extraValidators[validationItem.type] !== 'undefined'
-                           ? extraValidators[validationItem.type]
-                           : Validator.hasOwnProperty(validationItem.type)
-                               && typeof Validator[validationItem.type] === 'function'
-                               ? Validator[validationItem.type]
-                               : undefined;
+var validateAnswer = (value = '', validationItem, questionAnswers) => {
+  var validationMethod =
+    typeof extraValidators[validationItem.type] !== 'undefined'
+      ? extraValidators[validationItem.type]
+      : Validator.hasOwnProperty(validationItem.type) &&
+        typeof Validator[validationItem.type] === 'function'
+      ? Validator[validationItem.type]
+      : undefined;
 
   if (!validationMethod) {
-    throw new Error('Winterfell: Attempted to validate for undefined method "'
-                    + validationItem.type + '"');
+    throw new Error(
+      'Winterfell: Attempted to validate for undefined method "' +
+        validationItem.type +
+        '"'
+    );
   }
 
   /*
@@ -58,9 +60,7 @@ var validateAnswer = (value, validationItem, questionAnswers) => {
    * as the parameter.
    */
   validationParameters = validationParameters.map(p => {
-    return typeof p === 'string'
-             ? StringParser(p, questionAnswers)
-             : p;
+    return typeof p === 'string' ? StringParser(p, questionAnswers) : p;
   });
 
   /*
@@ -87,35 +87,36 @@ var validateAnswer = (value, validationItem, questionAnswers) => {
  */
 var getActiveQuestions = (questions, questionAnswers, activeQuestions) => {
   activeQuestions = activeQuestions || [];
+  questions.forEach(question => {
+    activeQuestions.push({
+      questionId: question.questionId,
+      input: question.input,
+      validations: question.validations
+    });
 
-  questions
-    .forEach(question => {
-      activeQuestions.push({
-        questionId  : question.questionId,
-        validations : question.validations
-      });
+    if (
+      typeof question.input.options === 'undefined' ||
+      question.input.options.length === 0
+    ) {
+      return;
+    }
 
-      if (typeof question.input.options === 'undefined'
-          || question.input.options.length === 0) {
+    question.input.options.forEach(option => {
+      if (
+        typeof option.conditionalQuestions === 'undefined' ||
+        option.conditionalQuestions.length === 0 ||
+        questionAnswers[question.questionId] !== option.value
+      ) {
         return;
       }
 
-      question
-        .input
-        .options
-        .forEach(option => {
-          if (typeof option.conditionalQuestions === 'undefined'
-               || option.conditionalQuestions.length == 0
-               || questionAnswers[question.questionId] != option.value) {
-            return;
-          }
-
-          activeQuestions = getActiveQuestions(option.conditionalQuestions,
-                                               questionAnswers,
-                                               activeQuestions);
-        });
-
+      activeQuestions = getActiveQuestions(
+        option.conditionalQuestions,
+        questionAnswers,
+        activeQuestions
+      );
     });
+  });
 
   return activeQuestions;
 };
@@ -130,10 +131,12 @@ var getActiveQuestions = (questions, questionAnswers, activeQuestions) => {
 var getActiveQuestionsFromQuestionSets = (questionSets, questionAnswers) => {
   var questionsToCheck = [];
 
-  questionSets
-    .forEach(questionSet => Array.prototype.push.apply(
-      questionsToCheck, getActiveQuestions(questionSet.questions, questionAnswers)
-    ));
+  questionSets.forEach(questionSet =>
+    Array.prototype.push.apply(
+      questionsToCheck,
+      getActiveQuestions(questionSet.questions, questionAnswers)
+    )
+  );
 
   return questionsToCheck;
 };
@@ -146,11 +149,14 @@ var getActiveQuestionsFromQuestionSets = (questionSets, questionAnswers) => {
  * @return object                  Set of questions and their invalidations
  */
 var getQuestionPanelInvalidQuestions = (questionSets, questionAnswers) => {
-  var questionsToCheck = getActiveQuestionsFromQuestionSets(questionSets, questionAnswers)
-                           .filter(question => {
-                             return question.validations instanceof Array
-                                      && question.validations.length > 0;
-                           });
+  var questionsToCheck = getActiveQuestionsFromQuestionSets(
+    questionSets,
+    questionAnswers
+  ).filter(question => {
+    return (
+      question.validations instanceof Array && question.validations.length > 0
+    );
+  });
 
   /*
    * Now we run validations for the questions
@@ -161,27 +167,35 @@ var getQuestionPanelInvalidQuestions = (questionSets, questionAnswers) => {
    * the validation method required.
    */
   var errors = {};
-  questionsToCheck
-    .forEach(({questionId, validations}) =>
-      [].forEach.bind(validations, validation => {
-        var valid = validateAnswer(questionAnswers[questionId],
-                                   validation,
-                                   questionAnswers);
-        if (valid) {
-          return;
-        }
-
-        /*
-         * If we got here, the validation failed. Add
-         * an validation error and continue to the next!
-         */
-        if (typeof errors[questionId] === 'undefined') {
-          errors[questionId] = [];
-        }
-
-        errors[questionId].push(validation);
+  questionsToCheck.forEach(({ input, questionId, validations }) => {
+    const questionAnswer = questionAnswers[questionId];
+    if (
+      !input.required &&
+      (typeof questionAnswer === 'undefined' || questionAnswer === '')
+    ) {
+      return;
+    }
+    [].forEach.bind(validations, validation => {
+      var valid = validateAnswer(
+        questionAnswers[questionId],
+        validation,
+        questionAnswers
+      );
+      if (valid) {
+        return;
       }
-    )());
+
+      /*
+       * If we got here, the validation failed. Add
+       * an validation error and continue to the next!
+       */
+      if (typeof errors[questionId] === 'undefined') {
+        errors[questionId] = [];
+      }
+
+      errors[questionId].push(validation);
+    })();
+  });
 
   return errors;
 };
@@ -194,13 +208,17 @@ var getQuestionPanelInvalidQuestions = (questionSets, questionAnswers) => {
  */
 var addValidationMethod = (name, method) => {
   if (typeof name !== 'string') {
-    throw new Error('Winterfell: First parameter of addValidationMethod '
-                    + 'must be of type string');
+    throw new Error(
+      'Winterfell: First parameter of addValidationMethod ' +
+        'must be of type string'
+    );
   }
 
   if (typeof method !== 'function') {
-    throw new Error('Winterfell: Second parameter of addValidationMethod '
-                    + 'must be of type function');
+    throw new Error(
+      'Winterfell: Second parameter of addValidationMethod ' +
+        'must be of type function'
+    );
   }
 
   extraValidators[name] = method;
@@ -211,10 +229,12 @@ var addValidationMethod = (name, method) => {
  *
  * @param  array methods Methods to add. name => func
  */
-var addValidationMethods = (methods) => {
+var addValidationMethods = methods => {
   if (typeof methods !== 'object') {
-    throw new Error('Winterfell: First parameter of addValidationMethods '
-                    + 'must be of type object');
+    throw new Error(
+      'Winterfell: First parameter of addValidationMethods ' +
+        'must be of type object'
+    );
   }
 
   for (var methodName in methods) {
@@ -222,11 +242,11 @@ var addValidationMethods = (methods) => {
   }
 };
 
-module.exports = {
-  validateAnswer                     : validateAnswer,
-  getActiveQuestions                 : getActiveQuestions,
-  getActiveQuestionsFromQuestionSets : getActiveQuestionsFromQuestionSets,
-  getQuestionPanelInvalidQuestions   : getQuestionPanelInvalidQuestions,
-  addValidationMethod                : addValidationMethod,
-  addValidationMethods               : addValidationMethods
+export default {
+  validateAnswer: validateAnswer,
+  getActiveQuestions: getActiveQuestions,
+  getActiveQuestionsFromQuestionSets: getActiveQuestionsFromQuestionSets,
+  getQuestionPanelInvalidQuestions: getQuestionPanelInvalidQuestions,
+  addValidationMethod: addValidationMethod,
+  addValidationMethods: addValidationMethods
 };

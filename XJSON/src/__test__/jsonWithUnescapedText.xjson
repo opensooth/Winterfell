@@ -1,0 +1,18 @@
+{
+  "htmlString": #ESCAPE(
+    <h1>
+      We want to write html in multiple lines
+    </h1>
+    <p class="we-do-not-want-to-maually-escape-quotes">
+      We do not want to manually escape any special chartacers. //~!@#$%^&**(),.:{{{
+        /.,?><}{:\|}   
+    </p>
+  )#ESCAPE,
+  "markupString": #ESCAPE(
+    # Markup
+
+    - spaces / new lines around escaped text are trimmed
+    - spaces / new lines within escpaed text are preserved
+
+  )#ESCAPE
+}

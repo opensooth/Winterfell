@@ -1,16 +1,29 @@
 'use strict';
 
-var _ = require('lodash').noConflict();
-var Validator = require('validator');
-var StringParser = require('./stringParser');
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _validator = require('validator');
+
+var _validator2 = _interopRequireDefault(_validator);
+
+var _stringParser = require('./stringParser');
+
+var _stringParser2 = _interopRequireDefault(_stringParser);
 
 var extraValidators = {
-
   /*
    * isAccepted Validation Mehod
    */
   isAccepted: function isAccepted(value, expected) {
-    return value == expected;
+    return value === expected;
   },
 
   /*
@@ -21,11 +34,10 @@ var extraValidators = {
       return false;
     }
 
-    return _.every(value, function (item) {
+    return _lodash2['default'].every(value, function (item) {
       return options.indexOf(item) > -1;
     });
   }
-
 };
 
 /**
@@ -36,7 +48,9 @@ var extraValidators = {
  * @return boolean                Valid?
  */
 var validateAnswer = function validateAnswer(value, validationItem, questionAnswers) {
-  var validationMethod = typeof extraValidators[validationItem.type] !== 'undefined' ? extraValidators[validationItem.type] : Validator.hasOwnProperty(validationItem.type) && typeof Validator[validationItem.type] === 'function' ? Validator[validationItem.type] : undefined;
+  if (value === undefined) value = '';
+
+  var validationMethod = typeof extraValidators[validationItem.type] !== 'undefined' ? extraValidators[validationItem.type] : _validator2['default'].hasOwnProperty(validationItem.type) && typeof _validator2['default'][validationItem.type] === 'function' ? _validator2['default'][validationItem.type] : undefined;
 
   if (!validationMethod) {
     throw new Error('Winterfell: Attempted to validate for undefined method "' + validationItem.type + '"');
@@ -54,7 +68,7 @@ var validateAnswer = function validateAnswer(value, validationItem, questionAnsw
    * as the parameter.
    */
   validationParameters = validationParameters.map(function (p) {
-    return typeof p === 'string' ? StringParser(p, questionAnswers) : p;
+    return typeof p === 'string' ? (0, _stringParser2['default'])(p, questionAnswers) : p;
   });
 
   /*
@@ -81,10 +95,10 @@ var validateAnswer = function validateAnswer(value, validationItem, questionAnsw
  */
 var getActiveQuestions = function getActiveQuestions(questions, questionAnswers, activeQuestions) {
   activeQuestions = activeQuestions || [];
-
   questions.forEach(function (question) {
     activeQuestions.push({
       questionId: question.questionId,
+      input: question.input,
       validations: question.validations
     });
 
@@ -93,7 +107,7 @@ var getActiveQuestions = function getActiveQuestions(questions, questionAnswers,
     }
 
     question.input.options.forEach(function (option) {
-      if (typeof option.conditionalQuestions === 'undefined' || option.conditionalQuestions.length == 0 || questionAnswers[question.questionId] != option.value) {
+      if (typeof option.conditionalQuestions === 'undefined' || option.conditionalQuestions.length === 0 || questionAnswers[question.questionId] !== option.value) {
         return;
       }
 
@@ -143,9 +157,15 @@ var getQuestionPanelInvalidQuestions = function getQuestionPanelInvalidQuestions
    */
   var errors = {};
   questionsToCheck.forEach(function (_ref) {
+    var input = _ref.input;
     var questionId = _ref.questionId;
     var validations = _ref.validations;
-    return [].forEach.bind(validations, function (validation) {
+
+    var questionAnswer = questionAnswers[questionId];
+    if (!input.required && (typeof questionAnswer === 'undefined' || questionAnswer === '')) {
+      return;
+    }
+    [].forEach.bind(validations, function (validation) {
       var valid = validateAnswer(questionAnswers[questionId], validation, questionAnswers);
       if (valid) {
         return;
@@ -199,7 +219,7 @@ var addValidationMethods = function addValidationMethods(methods) {
   }
 };
 
-module.exports = {
+exports['default'] = {
   validateAnswer: validateAnswer,
   getActiveQuestions: getActiveQuestions,
   getActiveQuestionsFromQuestionSets: getActiveQuestionsFromQuestionSets,
@@ -207,3 +227,4 @@ module.exports = {
   addValidationMethod: addValidationMethod,
   addValidationMethods: addValidationMethods
 };
+module.exports = exports['default'];

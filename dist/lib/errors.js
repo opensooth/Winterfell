@@ -1,7 +1,9 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 var errorMessages = {
-
   /*
    * Fallback Error Message
    */
@@ -12,22 +14,13 @@ var errorMessages = {
    */
   isLength: function isLength(validationItem) {
     switch (validationItem.params.length) {
-
       case 1:
-        return 'Please enter a value with at least ' + validationItem.params[0] + ' character' + (validationItem.params[0] != 1 ? 's' : '');
-        break;
-
+        return 'Please enter a value with at least ' + validationItem.params[0] + ' character' + (validationItem.params[0] !== 1 ? 's' : '');
       case 2:
         return 'Please enter a value between ' + validationItem.params[0] + ' and ' + validationItem.params[1] + ' characters long';
-        break;
-
       default:
         return errorMessages['default'];
-        break;
-
     }
-
-    return errorMessage;
   },
 
   /*
@@ -195,4 +188,5 @@ var setErrorMessage = function setErrorMessage(type, message) {
   errorMessages[type] = message;
 };
 
-module.exports = errorMessages;
+exports['default'] = errorMessages;
+module.exports = exports['default'];

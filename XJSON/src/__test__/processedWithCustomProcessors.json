@@ -1,0 +1,26 @@
+{
+  "NOTES": {
+    "trimming": "Fragment content is trimmed"
+  },
+  "someProperty": {
+    "anotherProperty": 111,
+    "key": "value",
+    "valueFragment": {
+      "thisIs": "second fragment",
+      "NOTES": "fragment can be anything: value, key, key/value, any piece of text that when injected, forms valid json with surrounding code",
+      "numericalValue": -100,
+      "commas": "it's a good idea to exclude tailing comma from fragment so that it can be injected as last propery / array item",
+      "escaped": "<h1>\n          We want to write html in multiple lines\n        </h1>\n        <p class=\"we-do-not-want-to-maually-escape-quotes\">\n          We do not want to manually escape any special chartacers. //~!@#$%^&**(),.:{{{\n            /.,?><}{:\\|}   \n        </p>"
+    },
+    "complexFragment": {
+      "fourthFragmentKey": {
+        "thisIs": "second fragment",
+        "NOTES": "fragment can be anything: value, key, key/value, any piece of text that when injected, forms valid json with surrounding code",
+        "numericalValue": -100,
+        "commas": "it's a good idea to exclude tailing comma from fragment so that it can be injected as last propery / array item",
+        "escaped": "<h1>\n          We want to write html in multiple lines\n        </h1>\n        <p class=\"we-do-not-want-to-maually-escape-quotes\">\n          We do not want to manually escape any special chartacers. //~!@#$%^&**(),.:{{{\n            /.,?><}{:\\|}   \n        </p>"
+      }
+    }
+  },
+  "escaped": "<h1>\n      We want to write html in multiple lines\n    </h1>\n    <p class=\"we-do-not-want-to-maually-escape-quotes\">\n      We do not want to manually escape any special chartacers. //~!@#$%^&**(),.:{{{\n        /.,?><}{:\\|}   \n    </p>"
+}

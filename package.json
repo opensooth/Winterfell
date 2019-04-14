@@ -1,14 +1,12 @@
 {
-  "name": "winterfell",
-  "version": "1.1.4",
+  "name": "@opensooth/winterfell",
+  "version": "1.0.0",
   "description": "Generate complex, validated and extendable JSON-based forms in React",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rimraf dist",
-    "build:examples": "gulp build-examples",
     "build": "babel src --out-dir dist && webpack",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run build"
   },
   "keywords": [
     "winterfell",
@@ -24,10 +22,10 @@
     "questions",
     "react-component"
   ],
-  "author": "Andrew Hathaway <andrew@andrewhathaway.net>",
+  "author": "opensooth",
   "repository": {
     "type": "git",
-    "url": "git://github.com/andrewhathaway/winterfell.git"
+    "url": "https://github.com/opensooth/Winterfell.git"
   },
   "license": "MIT",
   "peerDependencies": {

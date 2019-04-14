@@ -1,0 +1,66 @@
+{
+  #FRAGMENT(FIRST_FRAGMENT_ID)#FRAGMENT,
+  "someProperty": {
+    "anotherProperty": 111,
+    #FRAGMENT(THIRD_FRAGMENT_ID)#FRAGMENT,
+    "valueFragment": #FRAGMENT(SECOND_FRAGMENT_ID)#FRAGMENT,
+    #FRAGMENT(COMPLEX_FRAGMENT_ID)#FRAGMENT
+  },
+  "escaped": #ESCAPE(
+    <h1>
+      We want to write html in multiple lines
+    </h1>
+    <p class="we-do-not-want-to-maually-escape-quotes">
+      We do not want to manually escape any special chartacers. //~!@#$%^&**(),.:{{{
+        /.,?><}{:\|}   
+    </p>
+  )#ESCAPE
+}
+
+#FRAGMENTS(
+  #FRAGMENT:FIRST_FRAGMENT_ID(
+    "notes": {
+      "trimming": "Fragment content is trimmed"
+    }
+  )#FRAGMENT
+
+  #FRAGMENT:SECOND_FRAGMENT_ID(
+    {
+      "thisIs": "second fragment",
+      "notes": "fragment can be anything: value, key, key/value, any piece of text that when injected, forms valid json with surrounding code",
+      "numericalValue": -100,
+      "commas": "it's a good idea to exclude tailing comma from fragment so that it can be injected as last propery / array item",
+      "escaped": #ESCAPE(
+        <h1>
+          We want to write html in multiple lines
+        </h1>
+        <p class="we-do-not-want-to-maually-escape-quotes">
+          We do not want to manually escape any special chartacers. //~!@#$%^&**(),.:{{{
+            /.,?><}{:\|}   
+        </p>
+      )#ESCAPE
+    }
+  )#FRAGMENT
+
+  #FRAGMENT:COMPLEX_FRAGMENT_ID(
+    "complexFragment": #FRAGMENT(FOURTH_FRAGMENT_ID)#FRAGMENT
+  )#FRAGMENT
+
+  #FRAGMENT:THIRD_FRAGMENT_ID(
+    "key": "value"
+  )#FRAGMENT
+
+  #FRAGMENT:FOURTH_FRAGMENT_ID(
+    {
+      "fourthFragmentKey": #FRAGMENT(SECOND_FRAGMENT_ID)#FRAGMENT
+    }
+  )#FRAGMENT
+)#FRAGMENTS
+
+#FRAGMENTS(
+  #FRAGMENT:FOURTH_FRAGMENT_ID(
+    {
+      "fourthFragmentKey": #FRAGMENT(SECOND_FRAGMENT_ID)#FRAGMENT
+    }
+  )#FRAGMENT
+)#FRAGMENTS

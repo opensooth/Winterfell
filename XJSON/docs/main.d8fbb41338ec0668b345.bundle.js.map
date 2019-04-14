@@ -1,0 +1,1 @@
+{"version":3,"file":"main.d8fbb41338ec0668b345.bundle.js","sources":["webpack:///./stories/test-fixtures/loadStringFromFile.js"],"sourcesContent":["export default async function loadStringFromFile(uri) {\n  const response = await fetch(uri);\n  const text = await response.text();\n  return text;\n}\n"],"mappings":"AAAA","sourceRoot":""}

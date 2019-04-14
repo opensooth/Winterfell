@@ -1,7 +1,6 @@
-var React = require('react');
+import React from 'react';
 
 class Button extends React.Component {
-
   handleClick(e) {
     e.preventDefault();
 
@@ -10,20 +9,21 @@ class Button extends React.Component {
 
   render() {
     return (
-      <button href="#"
-         className={this.props.className}
-         onClick={this.handleClick.bind(this)}>
+      <button
+        href="#"
+        className={this.props.className}
+        onClick={this.handleClick.bind(this)}
+      >
         {this.props.text}
       </button>
     );
   }
-
-};
+}
 
 Button.defaultProps = {
-  text      : 'Submit',
-  className : undefined,
-  onClick   : () => {}
+  text: 'Submit',
+  className: undefined,
+  onClick: () => {}
 };
 
-module.exports = Button;
+export default Button;

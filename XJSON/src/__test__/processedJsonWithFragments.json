@@ -1,0 +1,23 @@
+{
+  "notes": {
+    "trimming": "Fragment content is trimmed"
+  },
+  "someProperty": {
+    "anotherProperty": 111,
+    "key": "value",
+    "valueFragment": {
+      "thisIs": "second fragment",
+      "notes": "fragment can be anything: value, key, key/value, any piece of text that when injected, forms valid json with surrounding code",
+      "numericalValue": -100,
+      "commas": "it's a good idea to exclude tailing comma from fragment so that it can be injected as last propery / array item"
+    },
+    "complexFragment": {
+      "fourthFragmentKey": {
+        "thisIs": "second fragment",
+        "notes": "fragment can be anything: value, key, key/value, any piece of text that when injected, forms valid json with surrounding code",
+        "numericalValue": -100,
+        "commas": "it's a good idea to exclude tailing comma from fragment so that it can be injected as last propery / array item"
+      }
+    }
+  }
+}

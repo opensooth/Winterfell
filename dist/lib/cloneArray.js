@@ -1,5 +1,11 @@
 "use strict";
 
-module.exports = function (array) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports["default"] = function (array) {
   return array.slice(0);
 };
+
+module.exports = exports["default"];

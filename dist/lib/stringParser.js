@@ -1,6 +1,10 @@
 'use strict';
 
-module.exports = function (template, params) {
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+exports['default'] = function (template, params) {
   template = template || '';
   params = params || {};
 
@@ -22,7 +26,7 @@ module.exports = function (template, params) {
      * append the charater to the
      * parsedTemplate and move on
      */
-    if (!collecting && currentChar != '{' && currentChar != '}') {
+    if (!collecting && currentChar !== '{' && currentChar !== '}') {
       parsedTemplate += currentChar;
       continue;
     }
@@ -31,7 +35,7 @@ module.exports = function (template, params) {
      * If we're an opening brace,
      * start collecting for the buffer
      */
-    if (currentChar == '{') {
+    if (currentChar === '{') {
       collecting = true;
     }
 
@@ -40,7 +44,7 @@ module.exports = function (template, params) {
      * we're not a brace of any sort then add
      * the character to the buffer
      */
-    if (currentChar != '{' && currentChar != '}') {
+    if (currentChar !== '{' && currentChar !== '}') {
       buffer += currentChar;
     }
 
@@ -50,7 +54,7 @@ module.exports = function (template, params) {
      * buffers name from the params object
      * and add it to the parsedTemplate
      */
-    if (currentChar == '}') {
+    if (currentChar === '}') {
       var value = '';
       if (typeof params[buffer] !== 'undefined') {
         value = params[buffer];
@@ -69,3 +73,5 @@ module.exports = function (template, params) {
 
   return parsedTemplate;
 };
+
+module.exports = exports['default'];
